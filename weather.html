@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-section input {
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px;
+        }
+
+        .search-section input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
+        }
+
+        .search-section button {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .search-section button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quick-cities {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .quick-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-weather {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .city-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .city-name {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .city-date {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .weather-icon {
+            font-size: 5em;
+            color: #667eea;
+        }
+
+        .temperature-section {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .temp-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .temp-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .temp-value {
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        .weather-description {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 20px;
+            text-transform: capitalize;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-card {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-label {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .forecast-section {
+            margin-top: 30px;
+        }
+
+        .forecast-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .forecast-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+
+        .forecast-day {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .forecast-icon {
+            font-size: 2.5em;
+            margin: 10px 0;
+            color: #667eea;
+        }
+
+        .forecast-temp {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .forecast-high {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .forecast-low {
+            color: #999;
+        }
+
+        .error-message {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-text {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .main-weather {
+                padding: 20px;
+            }
+
+            .city-name {
+                font-size: 1.8em;
+            }
+
+            .weather-icon {
+                font-size: 3em;
+            }
+
+            .temp-box {
+                min-width: 150px;
+                padding: 20px;
+            }
+
+            .temp-value {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌤️ Weather Dashboard</h1>
+            <p>Real-time weather information from OpenWeatherMap</p>
+        </div>
+
+        <div class="search-section">
+            <input type="text" id="cityInput" placeholder="Enter city name..." />
+            <button onclick="searchWeather()">Search</button>
+            <div class="quick-cities">
+                <button class="quick-btn" onclick="searchCity('London')">London</button>
+                <button class="quick-btn" onclick="searchCity('New York')">New York</button>
+                <button class="quick-btn" onclick="searchCity('Tokyo')">Tokyo</button>
+                <button class="quick-btn" onclick="searchCity('Paris')">Paris</button>
+                <button class="quick-btn" onclick="searchCity('Dubai')">Dubai</button>
+                <button class="quick-btn" onclick="searchCity('Sydney')">Sydney</button>
+                <button class="quick-btn" onclick="searchCity('Seoul')">Seoul</button>
+                <button class="quick-btn" onclick="searchCity('Singapore')">Singapore</button>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="color: white; margin-top: 15px;">Loading weather data...</p>
+        </div>
+
+        <div id="weatherContainer" style="display: none;">
+            <div class="main-weather">
+                <div class="city-info">
+                    <div>
+                        <div class="city-name" id="cityName"></div>
+                        <div class="city-date" id="cityDate"></div>
+                    </div>
+                    <i class="fas" id="mainWeatherIcon" style="font-size: 5em; color: #667eea;"></i>
+                </div>
+
+                <div class="temperature-section">
+                    <div class="temp-box">
+                        <div class="temp-label">Current Temperature</div>
+                        <div class="temp-value" id="currentTemp"></div>
+                    </div>
+                    <div class="temp-box">
+                        <div class="temp-label">Feels Like</div>
+                        <div class="temp-value" id="feelsLike"></div>
+                    </div>
+                </div>
+
+                <div class="weather-description" id="weatherDescription"></div>
+
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <div class="detail-label">💧 Humidity</div>
+                        <div class="detail-value" id="humidity"></div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">💨 Wind Speed</div>
+                        <div class="detail-value" id="windSpeed"></div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">🎯 Pressure</div>
+                        <div class="detail-value" id="pressure"></div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">👁️ Visibility</div>
+                        <div class="detail-value" id="visibility"></div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">🌡️ Max Temp</div>
+                        <div class="detail-value" id="maxTemp"></div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-label">❄️ Min Temp</div>
+                        <div class="detail-value" id="minTemp"></div>
+                    </div>
+                </div>
+
+                <div class="forecast-section">
+                    <div class="forecast-title">5-Day Forecast</div>
+                    <div class="forecast-grid" id="forecastGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-text">
+            <p>💡 Tip: Search for any city to see its current weather and 5-day forecast</p>
+            <p>🔄 Data updates automatically • 📍 Powered by OpenWeatherMap API</p>
+        </div>
+    </div>
+
+    <script src="js/weather.js"></script>
+</body>
+</html>
